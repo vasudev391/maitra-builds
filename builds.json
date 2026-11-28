@@ -1,0 +1,149 @@
+{
+  "updated": "2026-11-28T06:11:25.584Z",
+  "builds": [
+    {
+      "flavor": "prod",
+      "version": "1.0.0",
+      "build": 20,
+      "abi": "arm64-v8a",
+      "name": "MaitraClinic-prod-1.0.0-b20-arm64-v8a.apk",
+      "file": "apks/MaitraClinic-prod-1.0.0-b20-arm64-v8a.apk.enc",
+      "size": 67973060,
+      "commit": "e28510c",
+      "branch": "testmaster",
+      "date": "2026-11-28T06:11:25.584Z"
+    },
+    {
+      "flavor": "staging",
+      "version": "1.0.0",
+      "build": 20,
+      "abi": "arm64-v8a",
+      "name": "MaitraClinic-staging-1.0.0-b20-arm64-v8a.apk",
+      "file": "apks/MaitraClinic-staging-1.0.0-b20-arm64-v8a.apk.enc",
+      "size": 67973084,
+      "commit": "e28510c",
+      "branch": "testmaster",
+      "date": "2026-11-28T06:11:25.584Z"
+    },
+    {
+      "flavor": "prod",
+      "version": "1.0.0",
+      "build": 18,
+      "abi": "arm64-v8a",
+      "name": "MaitraClinic-prod-1.0.0-b18-arm64-v8a.apk",
+      "file": "apks/MaitraClinic-prod-1.0.0-b18-arm64-v8a.apk.enc",
+      "size": 67973060,
+      "commit": "b1ab112",
+      "branch": "testmaster",
+      "date": "2026-11-28T05:54:00.999Z"
+    },
+    {
+      "flavor": "staging",
+      "version": "1.0.0",
+      "build": 18,
+      "abi": "arm64-v8a",
+      "name": "MaitraClinic-staging-1.0.0-b18-arm64-v8a.apk",
+      "file": "apks/MaitraClinic-staging-1.0.0-b18-arm64-v8a.apk.enc",
+      "size": 67973088,
+      "commit": "b1ab112",
+      "branch": "testmaster",
+      "date": "2026-11-28T05:54:00.999Z"
+    },
+    {
+      "flavor": "prod",
+      "version": "1.0.0",
+      "build": 17,
+      "abi": "arm64-v8a",
+      "name": "MaitraClinic-prod-1.0.0-b17-arm64-v8a.apk",
+      "file": "apks/MaitraClinic-prod-1.0.0-b17-arm64-v8a.apk.enc",
+      "size": 67973060,
+      "commit": "828f9b3",
+      "branch": "testmaster",
+      "date": "2026-11-27T17:34:59.095Z"
+    },
+    {
+      "flavor": "staging",
+      "version": "1.0.0",
+      "build": 17,
+      "abi": "arm64-v8a",
+      "name": "MaitraClinic-staging-1.0.0-b17-arm64-v8a.apk",
+      "file": "apks/MaitraClinic-staging-1.0.0-b17-arm64-v8a.apk.enc",
+      "size": 67973088,
+      "commit": "828f9b3",
+      "branch": "testmaster",
+      "date": "2026-11-27T17:34:59.095Z"
+    },
+    {
+      "flavor": "prod",
+      "version": "1.0.0",
+      "build": 17,
+      "abi": "armeabi-v7a",
+      "name": "MaitraClinic-prod-1.0.0-b17-armeabi-v7a.apk",
+      "file": "apks/MaitraClinic-prod-1.0.0-b17-armeabi-v7a.apk.enc",
+      "size": 54861254,
+      "commit": "828f9b3",
+      "branch": "testmaster",
+      "date": "2026-11-27T17:34:59.095Z"
+    },
+    {
+      "flavor": "staging",
+      "version": "1.0.0",
+      "build": 17,
+      "abi": "armeabi-v7a",
+      "name": "MaitraClinic-staging-1.0.0-b17-armeabi-v7a.apk",
+      "file": "apks/MaitraClinic-staging-1.0.0-b17-armeabi-v7a.apk.enc",
+      "size": 54861278,
+      "commit": "828f9b3",
+      "branch": "testmaster",
+      "date": "2026-11-27T17:34:59.095Z"
+    },
+    {
+      "flavor": "prod",
+      "version": "1.0.0",
+      "build": 16,
+      "abi": "arm64-v8a",
+      "name": "MaitraClinic-prod-1.0.0-b16-arm64-v8a.apk",
+      "file": "apks/MaitraClinic-prod-1.0.0-b16-arm64-v8a.apk.enc",
+      "size": 67973060,
+      "commit": "adaab71",
+      "branch": "testmaster",
+      "date": "2026-11-26T19:00:15.196Z"
+    },
+    {
+      "flavor": "staging",
+      "version": "1.0.0",
+      "build": 16,
+      "abi": "arm64-v8a",
+      "name": "MaitraClinic-staging-1.0.0-b16-arm64-v8a.apk",
+      "file": "apks/MaitraClinic-staging-1.0.0-b16-arm64-v8a.apk.enc",
+      "size": 67973084,
+      "commit": "adaab71",
+      "branch": "testmaster",
+      "date": "2026-11-26T19:00:15.196Z"
+    },
+    {
+      "flavor": "prod",
+      "version": "1.0.0",
+      "build": 16,
+      "abi": "armeabi-v7a",
+      "name": "MaitraClinic-prod-1.0.0-b16-armeabi-v7a.apk",
+      "file": "apks/MaitraClinic-prod-1.0.0-b16-armeabi-v7a.apk.enc",
+      "size": 54861254,
+      "commit": "adaab71",
+      "branch": "testmaster",
+      "date": "2026-11-26T19:00:15.196Z"
+    },
+    {
+      "flavor": "staging",
+      "version": "1.0.0",
+      "build": 16,
+      "abi": "armeabi-v7a",
+      "name": "MaitraClinic-staging-1.0.0-b16-armeabi-v7a.apk",
+      "file": "apks/MaitraClinic-staging-1.0.0-b16-armeabi-v7a.apk.enc",
+      "size": 54861278,
+      "commit": "adaab71",
+      "branch": "testmaster",
+      "date": "2026-11-26T19:00:15.196Z"
+    }
+  ]
+}

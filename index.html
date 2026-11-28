@@ -1,0 +1,521 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<meta name="color-scheme" content="light dark">
+<title>Maitra Clinic Builds</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Red+Hat+Display:wght@500;700&family=Red+Hat+Text:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  /* The app's own Fresh UI tokens (lib/config/themes/app_colors.dart). */
+  :root {
+    --page: #f2f6f2; --surface: #ffffff; --ink: #183a33; --mute: #5f7069; --line: #e1e9e3;
+    --ward: #174b43; --ward-deep: #0f3530; --aqua: #d9e9d6; --on-ward: #ffffff; --on-ward-mute: #b9d2c6;
+    --go: #1f9e6c; --go-ink: #ffffff; --go-soft: #e3f4ec; --err: #b8452f; --err-soft: #fbe9e4;
+    --focus: #2db37e; --shadow: 0 18px 40px -18px rgba(15, 53, 48, .35);
+    --display: "Red Hat Display", system-ui, sans-serif;
+    --text: "Red Hat Text", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --page: #0d1b18; --surface: #13261f; --ink: #e4eee9; --mute: #9db2a9; --line: #22392f;
+      --ward: #1d5a50; --ward-deep: #12403a; --aqua: #cfe3cb; --on-ward: #ffffff; --on-ward-mute: #b9d2c6;
+      --go: #2db37e; --go-ink: #06231a; --go-soft: #173a2c; --err: #ff9b85; --err-soft: #3a1d17;
+      --focus: #7fe0b5; --shadow: none;
+    }
+  }
+  :root[data-theme="dark"] {
+    --page: #0d1b18; --surface: #13261f; --ink: #e4eee9; --mute: #9db2a9; --line: #22392f;
+    --ward: #1d5a50; --ward-deep: #12403a; --aqua: #cfe3cb; --on-ward: #ffffff; --on-ward-mute: #b9d2c6;
+    --go: #2db37e; --go-ink: #06231a; --go-soft: #173a2c; --err: #ff9b85; --err-soft: #3a1d17;
+    --focus: #7fe0b5; --shadow: none;
+  }
+
+  * { box-sizing: border-box; }
+  /* hidden always hides, even on elements whose class sets display. */
+  [hidden] { display: none !important; }
+  html { -webkit-text-size-adjust: 100%; }
+  body { margin: 0; background: var(--page); color: var(--ink);
+         font: 400 16px/1.5 var(--text); font-variant-numeric: tabular-nums; }
+  .wrap { max-width: 560px; margin: 0 auto; padding: 0 16px; }
+  :focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; border-radius: 8px; }
+  button { font: inherit; color: inherit; cursor: pointer; }
+  button:disabled { cursor: default; }
+
+  /* Header */
+  .top { padding: 28px 0 18px; display: flex; align-items: center; gap: 12px; }
+  .mark { width: 40px; height: 40px; border-radius: 12px; background: var(--aqua); position: relative; flex: none; }
+  .mark::before, .mark::after { content: ""; position: absolute; background: var(--ward-deep); border-radius: 2px; }
+  .mark::before { left: 16px; top: 9px; width: 8px; height: 22px; }
+  .mark::after { left: 9px; top: 16px; width: 22px; height: 8px; }
+  h1 { font: 700 22px/1.2 var(--display); letter-spacing: -.01em; margin: 0; }
+  .sub { margin: 2px 0 0; color: var(--mute); font-size: 14px; }
+
+  /* Staging / Production */
+  .switch { display: flex; background: var(--surface); border: 1px solid var(--line); border-radius: 16px;
+            padding: 4px; margin-bottom: 16px; }
+  .switch button { flex: 1; border: 0; background: transparent; padding: 10px 8px; border-radius: 12px;
+                   font-weight: 700; font-size: 15px; color: var(--mute); min-height: 44px; }
+  .switch button[aria-pressed="true"] { background: var(--ward); color: var(--on-ward); }
+
+  /* The build card: the app's ID card, for the newest build. */
+  .card { background: var(--surface); border-radius: 24px; box-shadow: var(--shadow);
+          border: 1px solid var(--line); overflow: hidden; }
+  .band { background: var(--ward); color: var(--on-ward); padding: 18px 20px 22px; }
+  .band-top { display: flex; align-items: center; gap: 10px; font-size: 14px; color: var(--on-ward-mute); }
+  .band-top .mark { width: 28px; height: 28px; border-radius: 9px; }
+  .band-top .mark::before { left: 11px; top: 6px; width: 6px; height: 16px; }
+  .band-top .mark::after { left: 6px; top: 11px; width: 16px; height: 6px; }
+  .band-top strong { color: var(--on-ward); font-weight: 700; }
+  .build-no { font: 700 64px/1 var(--display); letter-spacing: -.03em; margin: 14px 0 4px; }
+  .build-no small { font: 500 20px/1 var(--display); letter-spacing: 0; color: var(--on-ward-mute); margin-right: 8px; }
+  .build-no.quiet { font-size: 34px; letter-spacing: -.01em; margin: 16px 0 6px; }
+  .when { color: var(--on-ward-mute); font-size: 15px; margin: 0; }
+
+  .facts { margin: 0; padding: 6px 20px 4px; display: grid; grid-template-columns: auto 1fr; }
+  .facts dt, .facts dd { padding: 11px 0; border-top: 1px solid var(--line); margin: 0; font-size: 15px; }
+  .facts dt:first-of-type, .facts dt:first-of-type + dd { border-top: 0; }
+  .facts dt { color: var(--mute); padding-right: 16px; }
+  .facts dd { text-align: right; font-weight: 500; overflow-wrap: anywhere; min-width: 0; }
+
+  .act { padding: 8px 20px 18px; }
+
+  /* The seal: the files are encrypted until the team password opens them.
+     A tear strip across the top of the packet; the right password tears it
+     away (the page's one motion). */
+  .seal-wrap { display: grid; grid-template-rows: 1fr; transition: grid-template-rows .4s ease .15s; }
+  .seal-wrap > .seal { overflow: hidden; min-height: 0; }
+  .seal-wrap.torn { grid-template-rows: 0fr; }
+  .seal { background: var(--aqua); color: var(--ward-deep); position: relative; }
+  .seal-in { padding: 16px 20px 6px; }
+  .seal-wrap.torn .seal { animation: tear .45s ease-in forwards; }
+  @keyframes tear {
+    to { transform: translateY(-14px) rotate(-1.5deg); opacity: 0; }
+  }
+  /* Perforation, with a notch at each edge: where it tears. */
+  .perf { height: 12px; position: relative; background: var(--aqua);
+          border-bottom: 2px dashed color-mix(in srgb, var(--ward-deep) 45%, transparent); }
+  .perf::before, .perf::after { content: ""; position: absolute; bottom: -12px; width: 22px; height: 22px;
+          border-radius: 50%; background: var(--page); box-shadow: inset 0 0 0 1px var(--line); }
+  .perf::before { left: -11px; } .perf::after { right: -11px; }
+  .seal-head { display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 15px; margin: 0 0 12px; }
+  .seal-head svg { flex: none; }
+  .lock label { display: block; font-weight: 500; font-size: 14px; margin-bottom: 6px; }
+  .lock .row { display: flex; gap: 8px; }
+  .lock input { flex: 1; min-width: 0; font: inherit; color: var(--ink); background: var(--surface);
+                border: 1.5px solid color-mix(in srgb, var(--ward-deep) 25%, transparent); border-radius: 14px;
+                padding: 12px 14px; min-height: 50px; }
+  .lock input:focus-visible { border-color: var(--ward); outline-offset: 0; }
+  .lock input[aria-invalid="true"] { border-color: var(--err); }
+  .lock .primary { background: var(--ward); color: var(--on-ward); }
+  .seal .msg.err { color: var(--err); }
+  :root[data-theme="dark"] .seal .msg.err { color: #9e2f1c; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .seal .msg.err { color: #9e2f1c; } }
+
+  /* Two pockets: the file for this phone, and the one for older phones. */
+  .pockets { display: grid; gap: 10px; }
+  .pocket-alt { width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 12px;
+                text-align: left; border: 1.5px solid var(--line); background: transparent; border-radius: 16px;
+                padding: 12px 18px; min-height: 50px; font-weight: 700; font-size: 15px; color: var(--ink); }
+  .pocket-alt small { display: block; font-weight: 400; color: var(--mute); font-size: 13px; }
+  .pocket-alt .size { color: var(--mute); font-weight: 500; white-space: nowrap; }
+  .pocket-alt:hover:not(:disabled) { border-color: var(--ward); }
+
+  .primary { border: 0; border-radius: 16px; background: var(--go); color: var(--go-ink);
+             font-weight: 700; font-size: 17px; padding: 14px 18px; min-height: 50px; }
+  .primary:hover:not(:disabled) { filter: brightness(1.06); }
+  .primary:disabled { opacity: .6; }
+  .get { width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 12px; text-align: left; }
+  .get .what { display: block; min-width: 0; }
+  .get .size { font-weight: 500; font-size: 15px; opacity: .85; white-space: nowrap; }
+
+  .link { border: 0; background: none; padding: 4px 2px; color: var(--ward); font-weight: 700;
+          text-decoration: underline; text-underline-offset: 3px; font-size: 14px; }
+  :root[data-theme="dark"] .link { color: var(--aqua); }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .link { color: var(--aqua); } }
+  .link:disabled { color: var(--mute); text-decoration: none; }
+
+  progress { display: block; width: 100%; height: 6px; margin-top: 12px; appearance: none; border: 0;
+             border-radius: 6px; background: var(--line); overflow: hidden; }
+  progress::-webkit-progress-bar { background: var(--line); }
+  progress::-webkit-progress-value { background: var(--go); transition: width .2s; }
+  progress::-moz-progress-bar { background: var(--go); }
+  progress[hidden] { display: none; }
+
+  .msg { font-size: 14px; margin: 10px 0 0; }
+  .msg:empty { margin: 0; }
+  .msg.err { color: var(--err); font-weight: 500; }
+  .msg.ok { color: var(--go); font-weight: 500; }
+  :root[data-theme="dark"] .msg.ok { color: var(--go); }
+
+  .note { margin: 0; padding: 22px 20px; color: var(--mute); }
+  .note strong { color: var(--ink); display: block; font: 700 18px/1.3 var(--display); margin-bottom: 4px; }
+
+  /* Earlier builds */
+  h2 { font: 700 18px/1.3 var(--display); margin: 32px 0 6px; }
+  .older { list-style: none; margin: 0; padding: 0; }
+  .older li { padding: 14px 0; border-top: 1px solid var(--line); }
+  .older li:first-child { border-top: 0; }
+  .older .head { display: flex; justify-content: space-between; gap: 12px; align-items: baseline; }
+  .older .title { font-weight: 700; }
+  .older .meta { color: var(--mute); font-size: 14px; text-align: right; }
+  .older .files { display: flex; flex-wrap: wrap; gap: 4px 16px; margin-top: 2px; }
+  .older .empty { color: var(--mute); }
+
+  /* Install */
+  .steps { margin: 0; padding-left: 22px; }
+  .steps li { padding: 4px 0 4px 4px; }
+  .steps li::marker { font: 700 16px var(--display); color: var(--ward); }
+  .fine { color: var(--mute); font-size: 14px; margin: 10px 0 0; }
+  footer { padding: 32px 0 40px; }
+
+  .sr { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden;
+        clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+
+  @media (max-width: 380px) {
+    .build-no { font-size: 54px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    progress::-webkit-progress-value { transition: none; }
+    .seal-wrap { transition: none; }
+    .seal-wrap.torn .seal { animation: none; opacity: 0; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <span class="mark" aria-hidden="true"></span>
+    <div>
+      <h1>Maitra Clinic builds</h1>
+      <p class="sub">Android test builds of the staff app</p>
+    </div>
+  </header>
+
+  <main>
+    <div class="switch" role="group" aria-label="Build">
+      <button type="button" data-flavor="staging" aria-pressed="true">Staging</button>
+      <button type="button" data-flavor="prod" aria-pressed="false">Production</button>
+    </div>
+
+    <section class="card" id="card" aria-labelledby="cardTitle" aria-busy="true">
+      <div class="seal-wrap" id="sealWrap" hidden>
+        <div class="seal">
+          <form class="lock seal-in" id="unlock" autocomplete="off" novalidate>
+            <p class="seal-head">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+              Sealed for hospital staff
+            </p>
+            <label for="pw">Team password</label>
+            <div class="row">
+              <input id="pw" type="password" autocomplete="current-password" required aria-describedby="lockMsg">
+              <button class="primary" id="go" type="submit">Open</button>
+            </div>
+            <p id="lockMsg" class="msg" role="status" aria-live="polite"></p>
+          </form>
+          <div class="perf" aria-hidden="true"></div>
+        </div>
+      </div>
+      <div class="band">
+        <div class="band-top"><span class="mark" aria-hidden="true"></span><span id="cardTitle"><strong>Staging</strong>, newest build</span></div>
+        <p class="build-no" id="buildNo"><small>Build</small> …</p>
+        <p class="when" id="when">Loading builds…</p>
+      </div>
+      <dl class="facts" id="facts" hidden></dl>
+      <div class="act" id="get" hidden>
+        <div class="pockets">
+          <button class="primary get" id="get64" type="button"><span class="what">For this phone</span><span class="size" id="size64"></span></button>
+          <button class="pocket-alt" id="get32" type="button" hidden><span>Older phones<small>Only if the first one won't install</small></span><span class="size" id="size32"></span></button>
+        </div>
+        <progress id="bar" max="100" value="0" hidden aria-label="Download progress"></progress>
+        <p id="getMsg" class="msg" role="status" aria-live="polite"></p>
+      </div>
+      <p class="note" id="note" hidden></p>
+    </section>
+
+    <h2 id="olderTitle">Earlier builds</h2>
+    <ul class="older" id="older" aria-labelledby="olderTitle"></ul>
+
+    <h2>Installing on a phone</h2>
+    <ol class="steps">
+      <li>Open this page in Chrome on the phone, open the packet with the team password and tap <b>For this phone</b>.</li>
+      <li>Open the downloaded file. If Chrome asks, allow it to install unknown apps.</li>
+      <li>A newer build installs over the old one and keeps you signed in.</li>
+    </ol>
+    <p class="fine">Staging is the Sales Demo hospital; Production is the live Maitra Clinic one. Use the same one on every phone you test calls with. The last five builds are kept; older phones and the emulator file are in the CI run.</p>
+  </main>
+  <footer></footer>
+</div>
+
+<script type="module">
+// Opened from disk (file://), the browser blocks the build list and the
+// decrypt module, so say so instead of showing an empty page. The module is
+// loaded only when a download needs it, so the page itself still runs.
+const fromDisk = location.protocol === 'file:';
+const decryptModule = () => import('./decrypt.mjs');
+
+const $ = (id) => document.getElementById(id);
+let password = '';
+let builds = [];
+let flavor = 'staging';
+let loadFailed = false;
+
+const NAMES = { staging: 'Staging', prod: 'Production' };
+
+function fmtSize(n) { return n >= 1048576 ? (n / 1048576).toFixed(1) + ' MB' : Math.round(n / 1024) + ' KB'; }
+function fmtDate(s, withYear = false) {
+  const d = new Date(s);
+  if (isNaN(d)) return '';
+  return d.toLocaleString(undefined, { day: 'numeric', month: 'short', ...(withYear ? { year: 'numeric' } : {}), hour: '2-digit', minute: '2-digit' });
+}
+function setMsg(el, text, kind = '') { el.textContent = text; el.className = 'msg' + (kind ? ' ' + kind : ''); }
+
+try {
+  const saved = localStorage.getItem('mcb-flavor');
+  if (saved === 'prod' || saved === 'staging') flavor = saved;
+} catch (_) {}
+
+async function loadManifest() {
+  if (fromDisk) { builds = []; return; }
+  try {
+    const res = await fetch('builds.json', { cache: 'no-store' });
+    if (res.status === 404) { builds = []; return; }
+    if (!res.ok) throw new Error(String(res.status));
+    const data = await res.json();
+    builds = Array.isArray(data.builds) ? data.builds : [];
+  } catch (_) {
+    builds = [];
+    loadFailed = true;
+  }
+}
+
+/** Builds of the chosen flavor, newest first, grouped by build number. */
+function groups() {
+  const list = builds.filter((b) => b.flavor === flavor);
+  const nums = [...new Set(list.map((b) => b.build))].sort((a, b) => b - a);
+  return nums.map((n) => {
+    const files = list.filter((b) => b.build === n);
+    return { n, files, first: files[0], abi: (a) => files.find((f) => (f.abi ?? 'universal') === a) };
+  });
+}
+
+function render() {
+  document.querySelectorAll('.switch button').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.flavor === flavor)));
+  $('cardTitle').replaceChildren(Object.assign(document.createElement('strong'), { textContent: NAMES[flavor] }), ', newest build');
+  const card = $('card');
+  card.setAttribute('aria-busy', 'false');
+  const all = groups();
+  const newest = all[0];
+
+  $('buildNo').classList.toggle('quiet', !newest);
+  if (!newest) {
+    $('buildNo').textContent = loadFailed ? 'Not loaded' : 'No build yet';
+    $('when').textContent = loadFailed ? 'The build list did not load.' : 'Nothing published for ' + NAMES[flavor].toLowerCase() + ' yet.';
+    $('facts').hidden = true;
+    $('get').hidden = true;
+    $('sealWrap').hidden = true;
+    const note = $('note');
+    note.hidden = false;
+    note.replaceChildren();
+    if (fromDisk) {
+      note.append(
+        Object.assign(document.createElement('strong'), { textContent: 'Open this page from its web address' }),
+        'A file opened from the disk cannot load the builds. Use the download page link instead.',
+      );
+    } else if (loadFailed) {
+      note.append(
+        Object.assign(document.createElement('strong'), { textContent: 'Could not load the build list' }),
+        'Check the phone is online, then reload this page.',
+      );
+    } else {
+      note.textContent = 'Builds appear here a few minutes after each push to testmaster.';
+    }
+    renderOlder([]);
+    return;
+  }
+
+  $('note').hidden = true;
+  $('buildNo').innerHTML = '';
+  $('buildNo').append(Object.assign(document.createElement('small'), { textContent: 'Build' }), ' ' + newest.n);
+  $('when').textContent = 'Built ' + fmtDate(newest.first.date, true);
+
+  const facts = $('facts');
+  facts.hidden = false;
+  facts.replaceChildren();
+  for (const [k, v] of [['Version', newest.first.version], ['Server', flavor === 'prod' ? 'Live' : 'Test'], ['Branch', newest.first.branch], ['Commit', newest.first.commit]]) {
+    if (!v) continue;
+    facts.append(Object.assign(document.createElement('dt'), { textContent: k }), Object.assign(document.createElement('dd'), { textContent: v }));
+  }
+
+  const main = newest.abi('arm64-v8a') ?? newest.abi('universal') ?? newest.first;
+  const old = newest.abi('armeabi-v7a');
+  $('size64').textContent = fmtSize(main.size);
+  $('get64').setAttribute('aria-label', `Download build ${newest.n} for this phone, ${fmtSize(main.size)}`);
+  $('get64').onclick = () => download(main, $('get64'), $('bar'), $('getMsg'));
+  $('get32').hidden = !old;
+  if (old) {
+    $('size32').textContent = fmtSize(old.size);
+    $('get32').setAttribute('aria-label', `Download build ${newest.n}, 32-bit file, ${fmtSize(old.size)}`);
+    $('get32').onclick = () => download(old, $('get32'), $('bar'), $('getMsg'));
+  }
+  setMsg($('getMsg'), '');
+  $('bar').hidden = true;
+  showUnlocked(Boolean(password));
+  renderOlder(all.slice(1));
+}
+
+function renderOlder(rest) {
+  const ul = $('older');
+  ul.replaceChildren();
+  $('olderTitle').hidden = !rest.length;
+  for (const g of rest) {
+    const li = document.createElement('li');
+    const head = document.createElement('div');
+    head.className = 'head';
+    head.append(
+      Object.assign(document.createElement('span'), { className: 'title', textContent: 'Build ' + g.n }),
+      Object.assign(document.createElement('span'), { className: 'meta', textContent: fmtDate(g.first.date) }),
+    );
+    const files = document.createElement('div');
+    files.className = 'files';
+    const status = Object.assign(document.createElement('p'), { className: 'msg' });
+    status.setAttribute('role', 'status');
+    const bar = Object.assign(document.createElement('progress'), { max: 100, value: 0, hidden: true });
+    bar.setAttribute('aria-label', 'Download progress, build ' + g.n);
+    for (const [abi, label] of [['arm64-v8a', '64-bit'], ['armeabi-v7a', '32-bit'], ['universal', 'All phones']]) {
+      const f = g.abi(abi);
+      if (!f) continue;
+      const btn = Object.assign(document.createElement('button'), { type: 'button', className: 'link', textContent: `${label}, ${fmtSize(f.size)}` });
+      btn.setAttribute('aria-label', `Download build ${g.n}, ${label}, ${fmtSize(f.size)}`);
+      btn.dataset.dl = '1';
+      btn.disabled = !password;
+      btn.onclick = () => download(f, btn, bar, status);
+      files.append(btn);
+    }
+    li.append(head, files, bar, status);
+    ul.append(li);
+  }
+}
+
+/** Sealed: the tear strip shows and the pockets don't. [tear]: the user
+ *  just opened it, so the strip tears away (else it is simply gone). */
+function showUnlocked(on, tear = false) {
+  const wrap = $('sealWrap');
+  wrap.hidden = on && !tear;
+  wrap.classList.toggle('torn', on);
+  if (on && tear) setTimeout(() => { wrap.hidden = true; }, 650);
+  $('get').hidden = !on;
+  document.querySelectorAll('button[data-dl]').forEach((b) => { b.disabled = !on; });
+}
+
+async function fetchWithProgress(url, onProgress) {
+  const res = await fetch(url, { cache: 'no-store' });
+  if (!res.ok) throw new Error('The file could not be downloaded (' + res.status + '). Reload the page and try again.');
+  const total = Number(res.headers.get('content-length')) || 0;
+  if (!res.body || !total) return new Uint8Array(await res.arrayBuffer());
+  const out = new Uint8Array(total);
+  const reader = res.body.getReader();
+  let got = 0;
+  for (;;) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    out.set(value, got);
+    got += value.length;
+    onProgress(got / total);
+  }
+  return out.subarray(0, got);
+}
+
+let busy = false;
+async function download(b, btn, bar, status) {
+  if (busy) return;
+  busy = true;
+  btn.disabled = true;
+  bar.hidden = false;
+  bar.value = 0;
+  try {
+    setMsg(status, 'Downloading ' + fmtSize(b.size) + '…');
+    const enc = await fetchWithProgress(b.file, (p) => { bar.value = Math.round(p * 90); });
+    setMsg(status, 'Unlocking the file…');
+    const { decryptBytes } = await decryptModule();
+    const apk = await decryptBytes(enc, password);
+    bar.value = 100;
+    const url = URL.createObjectURL(new Blob([apk], { type: 'application/vnd.android.package-archive' }));
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = b.name;
+    document.body.append(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 60000);
+    setMsg(status, 'Saved. Open ' + b.name + ' from your downloads to install it.', 'ok');
+  } catch (e) {
+    bar.hidden = true;
+    setMsg(status, e && e.name === 'OperationError'
+      ? 'This build was locked with an older password. Use a newer build.'
+      : (e && e.message) || 'The download failed. Check the connection and try again.', 'err');
+  } finally {
+    btn.disabled = false;
+    busy = false;
+  }
+}
+
+/** check.enc holds "ok", encrypted like the builds: a quick password check. */
+async function checkPassword(pw) {
+  const res = await fetch('check.enc', { cache: 'no-store' });
+  if (!res.ok) throw new Error('nocheck');
+  const { decryptBytes } = await decryptModule();
+  const text = new TextDecoder().decode(await decryptBytes(new Uint8Array(await res.arrayBuffer()), pw));
+  return text === 'ok';
+}
+
+let auto = false;
+$('unlock').addEventListener('submit', async (ev) => {
+  ev.preventDefault();
+  const pw = $('pw').value;
+  const msg = $('lockMsg');
+  if (!pw) {
+    $('pw').setAttribute('aria-invalid', 'true');
+    setMsg(msg, 'Enter the team password.', 'err');
+    $('pw').focus();
+    return;
+  }
+  $('go').disabled = true;
+  setMsg(msg, 'Checking…');
+  try {
+    if (!(await checkPassword(pw))) throw new Error('bad');
+    password = pw;
+    try { sessionStorage.setItem('mcb-pw', pw); } catch (_) {}
+    $('pw').removeAttribute('aria-invalid');
+    setMsg(msg, '');
+    showUnlocked(true, !auto);
+    $('get64').focus({ preventScroll: auto });
+  } catch (e) {
+    $('pw').setAttribute('aria-invalid', 'true');
+    setMsg(msg, e.message === 'nocheck' ? 'No builds are published yet.' : 'That password did not open it. Ask the team for the current one.', 'err');
+    $('pw').select();
+  } finally {
+    $('go').disabled = false;
+    auto = false;
+  }
+});
+
+document.querySelectorAll('.switch button').forEach((b) => b.addEventListener('click', () => {
+  if (busy || flavor === b.dataset.flavor) return;
+  flavor = b.dataset.flavor;
+  try { localStorage.setItem('mcb-flavor', flavor); } catch (_) {}
+  render();
+}));
+
+await loadManifest();
+render();
+try {
+  const saved = sessionStorage.getItem('mcb-pw');
+  if (saved) { auto = true; $('pw').value = saved; $('unlock').requestSubmit(); }
+} catch (_) {}
+</script>
+</body>
+</html>
